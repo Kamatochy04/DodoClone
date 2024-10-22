@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useSet } from "react-use";
 
 import { FilterCheckbox, FilterChecboxProps } from "./filter-checkbox";
 import { Input } from "../ui/input";
@@ -30,21 +29,17 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
   defaultValue,
 }) => {
   const [showAll, setShowAll] = React.useState(false);
-  const [selected, { add, toggle }] = useSet<string>(new Set([]));
+  const [searchValue, setSearchValue] = React.useState("");
 
-  const onCheckedChange = (value: string) => {
-    toggle(value);
+  const list = showAll
+    ? items.filter((item) =>
+        item.text.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+      )
+    : defaultItems?.slice(0, limit);
+
+  const onChangeSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
   };
-
-  React.useEffect(() => {
-    if (defaultValue) {
-      defaultValue.forEach(add);
-    }
-  }, [defaultValue?.length]);
-
-  React.useEffect(() => {
-    onChange?.(Array.from(selected));
-  }, [selected]);
 
   return (
     <div className={className}>
@@ -55,15 +50,14 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
           <Input
             placeholder={searchInputPlaceholder}
             className="bg-gray-50 border-none"
+            onChange={onChangeSearchInput}
           />
         </div>
       )}
 
       <div className="flex flex-col gap-4 max-h-96 pr-2 overflow-auto scrollbar">
-        {(showAll ? items : defaultItems || items).map((item) => (
+        {list!.map((item) => (
           <FilterCheckbox
-            onCheckedChange={() => onCheckedChange(item.value)}
-            checked={selected.has(item.value)}
             key={String(item.value)}
             value={item.value}
             text={item.text}
