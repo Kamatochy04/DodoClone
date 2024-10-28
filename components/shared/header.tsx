@@ -4,6 +4,7 @@ import { Container } from "./container";
 import Image from "next/image";
 import { Button } from "../ui/_index";
 import { ArrowRight, ShoppingCart, User } from "lucide-react";
+import { SearchInput } from "./search-input";
 
 type Props = { className?: string };
 
@@ -20,11 +21,10 @@ export const Header: FC<Props> = ({ className }) => {
             </p>
           </div>
         </div>
-        {/* 
         <div className="mx-10 flex-1">
           <SearchInput />
-        </div> */}
-
+        </div>{" "}
+        *
         <div className="flex items-center gap-3 ">
           <Button variant="outline" className="flex items-center gap-1">
             <User size={16} />
